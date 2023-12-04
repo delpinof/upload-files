@@ -1,4 +1,4 @@
-package com.fherdelpino.uploadfiles.service;
+package com.fherdelpino.uploadfiles.service.exception;
 
 public class StorageException extends RuntimeException {
 

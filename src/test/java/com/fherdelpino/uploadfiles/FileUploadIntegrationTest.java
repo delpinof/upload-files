@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -38,12 +38,12 @@ public class FileUploadIntegrationTest {
     public void shouldUploadFile() throws Exception {
         ClassPathResource resource = new ClassPathResource(FILE_NAME, getClass());
 
-        MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+        MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
         map.add("file", resource);
         ResponseEntity<String> response = this.restTemplate.postForEntity("/", map,
                 String.class);
 
-        assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.FOUND);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         assertThat(response.getHeaders().getLocation().toString())
                 .startsWith("http://localhost:" + this.port + "/");
         then(storageService).should().store(any(MultipartFile.class));
@@ -57,7 +57,7 @@ public class FileUploadIntegrationTest {
         ResponseEntity<String> response = this.restTemplate
                 .getForEntity("/files/{filename}", String.class, FILE_NAME);
 
-        assertThat(response.getStatusCodeValue()).isEqualTo(200);
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
         assertThat(response.getHeaders().getFirst(HttpHeaders.CONTENT_DISPOSITION))
                 .isEqualTo(String.format("attachment; filename=\"%s\"", FILE_NAME));
         assertThat(response.getBody()).isEqualTo("Any random text...");

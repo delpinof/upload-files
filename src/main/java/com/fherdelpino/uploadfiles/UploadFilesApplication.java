@@ -1,6 +1,6 @@
 package com.fherdelpino.uploadfiles;
 
-import com.fherdelpino.uploadfiles.service.StorageProperties;
+import com.fherdelpino.uploadfiles.configuration.StorageProperties;
 import com.fherdelpino.uploadfiles.service.StorageService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
