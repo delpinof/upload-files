@@ -1,8 +1,7 @@
 package com.fherdelpino.uploadfiles;
 
-import com.fherdelpino.uploadfiles.service.exception.StorageFileNotFoundException;
 import com.fherdelpino.uploadfiles.service.StorageService;
-import org.hamcrest.Matchers;
+import com.fherdelpino.uploadfiles.service.exception.StorageFileNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
+import static org.hamcrest.Matchers.hasEntry;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -37,10 +37,12 @@ public class FileUploadTest {
         given(this.storageService.loadAll())
                 .willReturn(Stream.of(Paths.get("first.txt"), Paths.get("second.txt")));
 
-        this.mvc.perform(get("/")).andExpect(status().isOk())
-                .andExpect(model().attribute("files",
-                        Matchers.contains("http://localhost/files/first.txt",
-                                "http://localhost/files/second.txt")));
+        this.mvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpectAll(
+                        model().attribute("files", hasEntry("first.txt", "http://localhost/files/first.txt")),
+                        model().attribute("files", hasEntry("second.txt", "http://localhost/files/second.txt"))
+                );
     }
 
     @Test
