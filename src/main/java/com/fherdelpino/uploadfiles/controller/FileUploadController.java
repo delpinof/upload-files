@@ -18,7 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
+import java.nio.file.Path;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -30,12 +33,21 @@ public class FileUploadController {
     @GetMapping("/")
     public String listUploadedFiles(Model model) {
 
-        model.addAttribute("files", storageService.loadAll().map(
-                path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
-                        "serveFile", path.getFileName().toString()).build().toUri().toString())
-                .collect(Collectors.toList()));
+        Map<String, String> files = storageService.loadAll()
+                .map(Path::toString)
+                .collect(Collectors.toMap(Function.identity(), this::getUri, (o1, o2) -> o1, LinkedHashMap::new));
+
+        model.addAttribute("files", files);
 
         return "uploadForm";
+    }
+
+    private String getUri(String fileName) {
+        return MvcUriComponentsBuilder.fromMethodName(
+                FileUploadController.class,
+                "serveFile", fileName)
+                .build()
+                .toUriString();
     }
 
     @GetMapping("/files/{filename:.+}")
