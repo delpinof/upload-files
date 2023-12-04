@@ -1,6 +1,6 @@
 package com.fherdelpino.uploadfiles;
 
-import com.fherdelpino.uploadfiles.service.StorageFileNotFoundException;
+import com.fherdelpino.uploadfiles.service.exception.StorageFileNotFoundException;
 import com.fherdelpino.uploadfiles.service.StorageService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -54,7 +54,6 @@ public class FileUploadTest {
         then(this.storageService).should().store(multipartFile);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void should404WhenMissingFile() throws Exception {
         given(this.storageService.loadAsResource("test.txt"))

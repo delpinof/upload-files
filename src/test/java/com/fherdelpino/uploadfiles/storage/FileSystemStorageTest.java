@@ -1,8 +1,8 @@
 package com.fherdelpino.uploadfiles.storage;
 
 import com.fherdelpino.uploadfiles.service.FileSystemStorageService;
-import com.fherdelpino.uploadfiles.service.StorageException;
-import com.fherdelpino.uploadfiles.service.StorageProperties;
+import com.fherdelpino.uploadfiles.service.exception.StorageException;
+import com.fherdelpino.uploadfiles.configuration.StorageProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class FileSystemStorageTest {
 
-    private StorageProperties properties = new StorageProperties();
+    private final StorageProperties properties = new StorageProperties();
     private FileSystemStorageService service;
 
     @BeforeEach
@@ -39,10 +39,10 @@ public class FileSystemStorageTest {
 
     @Test
     public void saveNotPermitted() {
-        assertThrows(StorageException.class, () -> {
+        assertThrows(StorageException.class, () ->
             service.store(new MockMultipartFile("foo", "../foo.txt",
-                    MediaType.TEXT_PLAIN_VALUE, "Hello, World".getBytes()));
-        });
+                    MediaType.TEXT_PLAIN_VALUE, "Hello, World".getBytes()))
+        );
     }
 
     @Test
