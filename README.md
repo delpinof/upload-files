@@ -34,5 +34,8 @@ docker tag upload-files:latest upload-files:v1.0.0
 
 ### Run image in container
 ```shell
-docker run -d -p 8080:8080 --name upload-files-server upload-files
+docker run -d -p 8080:8080 \
+--name upload-files-server \
+--mount type=bind,source=$PWD/upload-dir,target=/upload-dir \
+upload-files:latest
 ```
