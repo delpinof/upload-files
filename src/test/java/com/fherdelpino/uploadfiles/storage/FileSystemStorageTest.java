@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
+import java.io.IOException;
 import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,5 +50,15 @@ public class FileSystemStorageTest {
     public void savePermitted() {
         service.store(new MockMultipartFile("foo", "bar/../foo.txt",
                 MediaType.TEXT_PLAIN_VALUE, "Hello, World".getBytes()));
+    }
+
+    @Test
+    public void saveAndDelete() throws IOException {
+        String fileName = "foo.txt";
+        service.store(new MockMultipartFile("foo", fileName, MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World".getBytes()));
+        assertThat(service.loadAll().count()).isNotZero();
+        service.delete(fileName);
+        assertThat(service.loadAll().count()).isZero();
     }
 }
