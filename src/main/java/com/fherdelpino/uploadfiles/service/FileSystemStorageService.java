@@ -95,7 +95,7 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public void delete(String fileName) throws IOException {
-        FileSystemUtils.deleteRecursively(load(fileName));
+    public boolean delete(String fileName) throws IOException {
+        return FileSystemUtils.deleteRecursively(load(fileName));
     }
 }

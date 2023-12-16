@@ -21,5 +21,5 @@ public interface StorageService {
 
     void deleteAll();
 
-    void delete(String fileName) throws IOException;
+    boolean delete(String fileName) throws IOException;
 }
